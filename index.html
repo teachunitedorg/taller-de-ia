@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taller IA-Perú</title>
+  <style>
+    :root {
+      --bg: #f5f9fb;
+      --card: rgba(255,255,255,0.94);
+      --text: #173042;
+      --muted: #5f7482;
+      --line: #d8e7ee;
+      --primary: #0f7ba8;
+      --primary-2: #0ea6b7;
+      --shadow: 0 18px 45px rgba(16, 63, 92, 0.12);
+      --radius: 22px;
+      --container: 1320px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(14,166,183,.12), transparent 28%),
+        radial-gradient(circle at top right, rgba(15,123,168,.10), transparent 24%),
+        linear-gradient(180deg, #f7fbfd 0%, #eef6fa 100%);
+    }
+
+    .container {
+      width: min(var(--container), calc(100% - 24px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 28px 0 26px;
+      border-bottom: 1px solid rgba(15,123,168,.08);
+      background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,255,255,.76));
+      backdrop-filter: blur(10px);
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      filter: blur(50px);
+      opacity: .18;
+      pointer-events: none;
+    }
+
+    .hero::before { background: #0ea6b7; top: -130px; left: -60px; }
+    .hero::after { background: #72c2ff; right: -60px; top: -120px; }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 26px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,.9);
+      border: 1px solid rgba(15,123,168,.1);
+      box-shadow: var(--shadow);
+      border-radius: 24px;
+      padding: 14px 20px;
+    }
+
+    .logo-wrap img {
+      display: block;
+      max-width: 250px;
+      width: 100%;
+      height: auto;
+    }
+
+    .hero-title {
+      margin: 0;
+      font-size: clamp(2rem, 4.8vw, 3.5rem);
+      line-height: 1.02;
+      letter-spacing: -.03em;
+      text-align: center;
+    }
+
+    .hero-author {
+      margin: 0;
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    section { padding: 34px 0; }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      letter-spacing: -.02em;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(15,123,168,.12);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .image-card { padding: 18px; }
+
+    .image-card img {
+      width: 100%;
+      display: block;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .panel { padding: 22px; }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .panel-title h3 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .panel-title span {
+      color: var(--muted);
+      font-size: .96rem;
+    }
+
+    .tools-table-wrap {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(255,255,255,.86);
+    }
+
+    table.tools-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .tools-table thead th {
+      text-align: left;
+      font-size: .95rem;
+      color: white;
+      padding: 14px 16px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+    }
+
+    .tools-table tbody tr {
+      border-top: 1px solid var(--line);
+      transition: background .2s ease;
+    }
+
+    .tools-table tbody tr:hover {
+      background: rgba(15,123,168,.04);
+    }
+
+    .tools-table td {
+      padding: 16px;
+      vertical-align: top;
+      font-size: .95rem;
+      line-height: 1.5;
+    }
+
+    .col-app strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+
+    .account-tag {
+      display: inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(15,123,168,.08);
+      color: var(--primary);
+      font-size: .82rem;
+      font-weight: 700;
+      border: 1px solid rgba(15,123,168,.12);
+    }
+
+    .tool-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 150px;
+      padding: 11px 14px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+      box-shadow: 0 10px 22px rgba(14,104,140,.16);
+      cursor: pointer;
+      border: 0;
+    }
+
+    .tool-link:hover { opacity: .92; }
+    .tool-link:focus-visible {
+      outline: 3px solid rgba(14,166,183,.35);
+      outline-offset: 2px;
+    }
+
+    .toggle-btn {
+      appearance: none;
+      border: 0;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: white;
+      padding: 12px 16px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(14, 104, 140, .22);
+      transition: transform .2s ease, opacity .2s ease;
+    }
+
+    .toggle-btn:hover { transform: translateY(-1px); }
+    .toggle-btn:active { transform: translateY(0); }
+
+    .all-tools-wrapper[hidden] { display: none; }
+
+    .category-block {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      background: rgba(255,255,255,.78);
+      margin-top: 14px;
+    }
+
+    .category-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 14px;
+      font-size: 1rem;
+    }
+
+    .category-title::before {
+      content: "";
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      box-shadow: 0 0 0 6px rgba(15,123,168,.08);
+    }
+
+    .examples {
+      display: grid;
+      gap: 18px;
+    }
+
+    .prompt-card {
+      position: relative;
+      overflow: hidden;
+      padding: 22px;
+      border-radius: 22px;
+      border: 1px solid rgba(15,123,168,.10);
+      box-shadow: var(--shadow);
+      background: white;
+    }
+
+    .prompt-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 8px;
+      border-radius: 22px 0 0 22px;
+      background: var(--stripe, var(--primary));
+    }
+
+    .prompt-card.c1 { --stripe: #0f7ba8; background: linear-gradient(180deg, #ffffff, #f4fbff); }
+    .prompt-card.c2 { --stripe: #7d5cff; background: linear-gradient(180deg, #ffffff, #f8f5ff); }
+    .prompt-card.c3 { --stripe: #16a085; background: linear-gradient(180deg, #ffffff, #f4fff9); }
+    .prompt-card.c4 { --stripe: #f59e0b; background: linear-gradient(180deg, #ffffff, #fffaf1); }
+    .prompt-card.c5 { --stripe: #ef476f; background: linear-gradient(180deg, #ffffff, #fff5f8); }
+    .prompt-card.c6 { --stripe: #00a6a6; background: linear-gradient(180deg, #ffffff, #f3ffff); }
+
+    .prompt-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .prompt-top h3 {
+      margin: 0;
+      font-size: 1.12rem;
+    }
+
+    .prompt-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.04);
+      font-weight: 800;
+      font-size: .82rem;
+    }
+
+    .prompt-body {
+      display: grid;
+      gap: 12px;
+    }
+
+    .prompt-layout {
+      display: grid;
+      grid-template-columns: 1.2fr .9fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .prompt-side-image {
+      width: 100%;
+      display: block;
+      border-radius: 16px;
+      border: 1px solid rgba(15,123,168,.12);
+      background: #fff;
+      box-shadow: 0 8px 22px rgba(16, 63, 92, 0.08);
+    }
+
+    .prompt-side-note {
+      margin-top: 10px;
+      font-size: .88rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .prompt-box {
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.82);
+      border: 1px solid rgba(15,123,168,.1);
+    }
+
+    .prompt-box strong {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--text);
+    }
+
+    .prompt-box .prompt-text {
+      display: block;
+      white-space: pre-wrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      color: #1b3650;
+      font-size: .94rem;
+      line-height: 1.6;
+    }
+
+    .prompt-box .prompt-text b {
+      font-weight: 800;
+      color: #102d45;
+    }
+
+    .edit-note {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(15,123,168,.1), rgba(14,166,183,.08));
+      border: 1px dashed rgba(15,123,168,.25);
+      color: #20485e;
+    }
+
+    footer {
+      padding: 14px 0 34px;
+      color: var(--muted);
+      text-align: center;
+      font-size: .95rem;
+    }
+
+    @media (max-width: 860px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 14px;
+      }
+
+      .hero-author {
+        text-align: center;
+        white-space: normal;
+      }
+
+      .tools-table thead {
+        display: none;
+      }
+
+      .tools-table,
+      .tools-table tbody,
+      .tools-table tr,
+      .tools-table td {
+        display: block;
+        width: 100%;
+      }
+
+      .tools-table tr {
+        padding: 14px;
+      }
+
+      .tools-table td {
+        padding: 8px 0;
+        border: 0;
+      }
+
+      .tools-table td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: .8rem;
+        font-weight: 800;
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: .03em;
+        margin-bottom: 6px;
+      }
+
+      .prompt-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container { width: min(var(--container), calc(100% - 14px)); }
+      .hero { padding-top: 20px; }
+      section { padding: 24px 0; }
+      .image-card { padding: 10px; }
+      .prompt-card { padding: 18px; }
+      .toggle-btn { width: 100%; }
+      .logo-wrap img { max-width: 210px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="container hero-inner">
+      <div class="logo-wrap">
+        <img src="https://tablabeducation.org/wp-content/uploads/2021/09/TU-logomain.png" alt="TeachUNITED" />
+      </div>
+      <h1 class="hero-title">Taller IA-Perú</h1>
+      <p class="hero-author">Ing. Pedro Céspedes Vargas</p>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Guía de prompts efectivos</h2>
+            <p>Imagen principal de referencia para el taller sobre construcción de prompts efectivos.</p>
+          </div>
+        </div>
+        <div class="card image-card">
+          <img
+            id="promptGuideImage"
+            src="https://www.dropbox.com/scl/fi/bakyfpk5dcbryv8ascmje/Prompts_Efectivos.png?rlkey=k94w81zoi8q27ywy0sufnhyle&st=6qtpn5b9&raw=1"
+            alt="Guía práctica para prompts efectivos"
+            referrerpolicy="no-referrer"
+          />
+          <div id="promptGuideStatus" style="padding-top:12px; color:var(--muted); font-size:.92rem;">Cargando imagen desde Dropbox...</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Herramientas de IA para explorar</h2>
+            <p>Se muestran en formato de tres columnas: nombre de la app con la cuenta indicada, explicación y enlace para abrir la herramienta.</p>
+          </div>
+        </div>
+
+        <div class="card panel">
+          <div class="panel-title">
+            <h3>Herramientas destacadas</h3>
+            <span>3 herramientas principales</span>
+          </div>
+          <div class="tools-table-wrap">
+            <table class="tools-table">
+              <thead>
+                <tr>
+                  <th>App y cuenta</th>
+                  <th>Explicación</th>
+                  <th>Abrir herramienta</th>
+                </tr>
+              </thead>
+              <tbody id="featuredList"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card panel" style="margin-top: 22px;">
+          <div class="panel-title">
+            <div>
+              <h3>Listado completo de IA</h3>
+              <span>Organizado por categoría y con el mismo formato de tres columnas</span>
+            </div>
+            <button id="toggleTools" class="toggle-btn" type="button">Mostrar todas las IA</button>
+          </div>
+          <div id="allTools" class="all-tools-wrapper" hidden>
+            <div id="allToolsList"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Ejemplos de prompts</h2>
+            <p>Ejemplos visuales con colores intercalados para que luego los puedas editar con facilidad.</p>
+          </div>
+        </div>
+        <div id="promptExamples" class="examples"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">Ing. Pedro Céspedes Vargas</div>
+  </footer>
+
+  <script>
+    const featuredTools = [
+      {
+        name: 'ChatGPT',
+        account: 'Google',
+        description: 'Asistente conversacional muy versátil para redactar textos, resumir documentos, crear planificaciones, generar ideas, explicar temas complejos con lenguaje sencillo, traducir, programar, corregir escritos y diseñar materiales educativos. También puede ayudar a crear rúbricas, actividades, cuestionarios, guiones, correos y recursos adaptados a distintos niveles educativos.',
+        link: 'https://chat.openai.com/'
+      },
+      {
+        name: 'Gemini',
+        account: 'Google',
+        description: 'Herramienta de IA multimodal que permite trabajar con texto, imágenes y análisis de información. Es útil para investigar temas, organizar ideas, resumir contenidos, responder preguntas, generar materiales de apoyo, interpretar imágenes y apoyar procesos de búsqueda, planificación y creación de recursos para clases, talleres o presentaciones.',
+        link: 'https://gemini.google.com/'
+      },
+      {
+        name: 'TeachUnited.app (TU-BOT)',
+        account: 'Institucional',
+        description: 'Asistente educativo orientado al acompañamiento pedagógico. Puede apoyar a docentes y facilitadores en la creación de actividades, planeamientos, orientaciones metodológicas, reflexión sobre la práctica, resolución de dudas, preparación de sesiones y generación de recursos alineados con procesos de formación y mejora continua.',
+        link: 'https://teachunited.app/'
+      }
+    ];
+
+    const allTools = [
+      { category: 'IA Generativa', name: 'Gemini', link: 'https://gemini.google.com/', account: 'Google', note: 'IA multimodal que ayuda a investigar, resumir, redactar, responder preguntas, analizar imágenes y organizar información para tareas, proyectos, clases y presentaciones.' },
+      { category: 'IA Generativa', name: 'ChatGPT', link: 'https://chat.openai.com/', account: 'Google', note: 'Asistente conversacional capaz de redactar textos, explicar conceptos, proponer ideas, programar, corregir escritos, crear actividades y apoyar procesos de aprendizaje y trabajo.' },
+      { category: 'IA Generativa', name: 'Microsoft Copilot', link: 'https://copilot.microsoft.com/', account: 'MEP', note: 'Herramienta integrada al ecosistema Microsoft que facilita redacción, búsqueda, resúmenes, generación de ideas y apoyo en documentos, hojas de cálculo y presentaciones.' },
+      { category: 'IA Generativa', name: 'Grok', link: 'https://grok.com/', account: 'Google', note: 'IA orientada a respuestas rápidas y acceso a información de actualidad. Puede ser útil para explorar tendencias, generar ideas y conversar sobre temas recientes.' },
+      { category: 'IA Generativa', name: 'DeepSeek', link: 'https://chat.deepseek.com/', account: 'Google', note: 'Modelo fuerte en razonamiento, matemáticas, lógica y programación. Resulta útil para resolver problemas, analizar ejercicios y trabajar explicaciones paso a paso.' },
+      { category: 'IA Generativa', name: 'Perplexity AI', link: 'https://www.perplexity.ai/', account: 'Google', note: 'Buscador con IA que responde preguntas mostrando fuentes. Es ideal para investigar, contrastar información y encontrar referencias con mayor rapidez.' },
+      { category: 'IA Generativa', name: 'Qwen', link: 'https://chat.qwen.ai/', account: 'Google', note: 'IA potente para generación de texto, análisis, conversación y apoyo en código. Puede servir para redacción, explicaciones y tareas técnicas.' },
+      { category: 'IA Generativa', name: 'Claude', link: 'https://claude.ai/', account: 'Google', note: 'Herramienta destacada para trabajar textos largos, análisis de documentos, redacción estructurada, síntesis y apoyo en tareas que requieren respuestas extensas y cuidadas.' },
+      { category: 'IA Generativa', name: 'Mistral AI', link: 'https://chat.mistral.ai/', account: 'Google', note: 'IA ligera y rápida para conversación, generación de ideas, resúmenes, redacción y apoyo general en tareas académicas o profesionales.' },
+      { category: 'Imágenes', name: 'Ideogram', link: 'https://ideogram.ai/', account: 'Google', note: 'Generador de imágenes con muy buen manejo de texto dentro del diseño. Útil para afiches, portadas, recursos visuales, títulos y materiales creativos.' },
+      { category: 'Imágenes', name: 'Microsoft Designer', link: 'https://designer.microsoft.com/home', account: 'MEP', note: 'Plataforma sencilla para crear diseños, publicaciones, invitaciones, banners y materiales visuales con ayuda de IA, especialmente útil para usuarios principiantes.' },
+      { category: 'Imágenes', name: 'Leonardo AI', link: 'https://leonardo.ai/', account: 'Google', note: 'Herramienta enfocada en imágenes de alta calidad, arte conceptual, ilustraciones y recursos visuales detallados para proyectos educativos o creativos.' },
+      { category: 'Imágenes', name: 'Playground AI', link: 'https://playgroundai.com/', account: 'Google', note: 'Generador visual con interfaz amigable que permite experimentar con estilos de imagen, composiciones y materiales gráficos de forma sencilla.' },
+      { category: 'Imágenes', name: 'Adobe Firefly', link: 'https://firefly.adobe.com/', account: 'Google', note: 'Solución de Adobe para crear imágenes, efectos y variaciones visuales con enfoque en uso ético y flujos de trabajo integrados con herramientas de diseño.' },
+      { category: 'Audio/Música', name: 'Udio', link: 'https://www.udio.com/', account: 'Google', note: 'Plataforma para generar canciones con letra, voz, ritmo y estilo musical. Puede servir para proyectos creativos, actividades motivadoras o recursos multimedia.' },
+      { category: 'Audio/Música', name: 'Soundverse', link: 'https://www.soundverse.ai/', account: 'Google', note: 'Herramienta para crear música, pistas y efectos de audio con IA, útil para videos, presentaciones, juegos o actividades educativas interactivas.' },
+      { category: 'Voz', name: 'ElevenLabs', link: 'https://elevenlabs.io/', account: 'Google', note: 'Generador de voz realista que permite crear narraciones, locuciones, doblajes y audios para clases, videos, historias o materiales accesibles.' },
+      { category: 'Voz', name: 'PlayHT', link: 'https://play.ht/', account: 'Google', note: 'Herramienta de texto a voz con múltiples idiomas y voces. Es útil para producir audios, lecturas, cápsulas informativas y contenidos narrados.' },
+      { category: 'Video', name: 'Runway ML', link: 'https://runwayml.com/', account: 'Google', note: 'Plataforma avanzada para generar y editar video con IA, aplicar efectos, eliminar fondos, crear escenas y producir contenido audiovisual innovador.' },
+      { category: 'Video', name: 'Pika Labs', link: 'https://pika.art/', account: 'Google', note: 'Herramienta para crear clips animados a partir de texto o imágenes, ideal para prototipos visuales, introducciones o recursos llamativos.' },
+      { category: 'Video', name: 'Synthesia', link: 'https://www.synthesia.io/', account: 'Google', note: 'Permite crear videos con avatares virtuales que presentan información, muy útil para tutoriales, clases grabadas, inducciones y comunicaciones institucionales.' },
+      { category: 'Video', name: 'HeyGen', link: 'https://www.heygen.com/', account: 'Google', note: 'Generador de videos con avatares y voces que facilita la creación de explicaciones, cápsulas formativas y mensajes audiovisuales profesionales.' },
+      { category: 'Video', name: 'Luma AI', link: 'https://lumalabs.ai/', account: 'Google', note: 'Herramienta enfocada en video e imágenes realistas, captura 3D y generación visual avanzada para proyectos más inmersivos y creativos.' },
+      { category: 'Video', name: 'Kaiber', link: 'https://kaiber.ai/', account: 'Google', note: 'Plataforma útil para transformar imágenes en animaciones o crear videos con estilo artístico, ideal para piezas visuales creativas y expresivas.' },
+      { category: 'Video', name: 'Invideo AI', link: 'https://invideo.io/ai', account: 'Google', note: 'Genera videos completos a partir de instrucciones en texto, integrando guion, escenas, voz y edición básica para producir materiales rápidamente.' },
+      { category: 'Video', name: 'CapCut', link: 'https://www.capcut.com/', account: 'Google', note: 'Editor de video con funciones de IA para subtítulos, recortes, efectos, mejora visual y producción de contenido para redes, clases o presentaciones.' },
+      { category: 'Investigación', name: 'NotebookLM', link: 'https://notebooklm.google.com/', account: 'Google', note: 'Herramienta centrada en análisis de documentos y fuentes propias. Permite resumir, explicar, comparar ideas y obtener respuestas basadas en materiales cargados.' },
+      { category: 'Desarrollo', name: 'Google AI Studio', link: 'https://aistudio.google.com/', account: 'Google', note: 'Entorno para explorar modelos de IA, probar prompts, desarrollar prototipos y construir experiencias más avanzadas basadas en inteligencia artificial.' },
+      { category: 'Presentaciones', name: 'Kimi', link: 'https://www.kimi.com/', account: 'Google', note: 'Herramienta que puede apoyar en generación de contenidos, síntesis y creación de presentaciones o materiales explicativos de forma rápida.' },
+      { category: 'Presentaciones', name: 'Gamma', link: 'https://gamma.app/', account: 'Google', note: 'Plataforma para crear presentaciones modernas, páginas visuales y documentos dinámicos con diseño atractivo y generación asistida por IA.' }
+    ];
+
+    const promptExamples = [
+      {
+        title: 'Ejemplo 1 · Prompt simple y prompt con estilo',
+        formula: 'Comparación de estilos',
+        description: 'Este ejemplo permite comparar un prompt simple con una versión que agrega un estilo literario específico para transformar el resultado.',
+        prompt: `<b>Prompt simple:</b> "Crea un cuento pequeño de un robot que se hace superhéroe salvando a un niño de un choque de auto"\n\nEscritores: William Shakespeare, Fyodor Dostoevsky, Gabriel García Márquez\n\n<b>Prompt con estilo (Miguel de Cervantes):</b> "Con el estilo de Miguel de Cervantes. Crea un cuento pequeño de un robot que se hace superhéroe salvando a un niño de un choque de auto"`
+      },
+      {
+        title: 'Ejemplo 2 · Transcripción de imagen',
+        formula: 'Imagen + instrucción directa',
+        description: 'Este ejemplo muestra cómo usar una imagen como entrada en una IA para pedir una transcripción directa del contenido visual.',
+        prompt: `a- Copie y pegue la imagen en su AI preferida\n\n<b>Prompt:</b> Transcribir a texto esta imagen`,
+        image: 'https://lh3.googleusercontent.com/sitesv/APaQ0STcR2cCYKm3QAb1EkH3pdzVhnmLqnZsu-iSYtQCe6W9RRyWcgpUafgj5_Q0hEJKZ2icVCzQ6cSiVkTwrNQvZj4cpRi8qQOc28UWqNALfXg_PfGwIZpazRB_vCwuATftBVZ2srY0CiWvA7AtHkKO7S7kYWMxwD9ysZKxwCqL4rM-ABd2G7LueBjlw54tywPtbEdgx3RIL4bXRMFbxFsfV8CFTWW0-Ss6SfQfplY=w1280'
+      },
+      {
+        title: 'Ejemplo 3 · Crear actividad de cuestionario basado en video',
+        formula: 'Rol + contexto + recurso + tarea específica',
+        description: 'Este ejemplo muestra cómo pedir a la IA que diseñe una actividad completa de preguntas a partir de un video, incluyendo instrucciones, tipo de preguntas, nivel de dificultad, objetivo de evaluación y respuestas explicadas.',
+        prompt: `6- Crear Actividad de Cuestionario basado en video.\n\nPrompt: Actúa como un experto en Ciencias Naturales, con amplia experiencia docente y metodologías activas. Dirige esta actividad a estudiantes de 6.º de primaria. Contextualiza la propuesta para un aula. La clase es presencial, tiene 45 minutos de duración y cuenta con acceso a proyector y pizarra digital. Diseña una actividad de preguntas sobre el video de YouTube “título: EL ciclo del Hidrológico del Agua”. Te dejo el enlace: URL: https://www.youtube.com/watch?v=zcBnm681O5Q.\n\n- Crea la actividad dando instrucciones: primero ver el video de YouTube.\n- Luego crea [5] preguntas de tipo: opción múltiple, que deben responder.\n- Para cada pregunta, especifica nivel de dificultad y objetivo de evaluación.\n- Al final, incluye la respuesta correcta y una explicación breve de cada una.`
+      },
+      {
+        title: 'Ejemplo 4 · Transformar letra en canción infantil',
+        formula: 'Rol + estilo musical + reglas + texto base',
+        description: 'Este ejemplo muestra cómo pedir a la IA que transforme una letra educativa en una canción con género, estructura, ritmo, reglas específicas y enfoque para primaria.',
+        prompt: `Eres compositor de música infantil. Transforma esta letra sobre los días de la semana en una canción de salsa energética para niños de primaria.\n\nREGLAS:\n- Conserva el contenido educativo (los 7 días en orden)\n- Estructura real: intro, verso, pre-coro, coro, puente, outro\n- Coro pegajoso con los 7 días, apto para gritar en clase\n- Un puente call & response (profe pregunta / niños responden)\n- Rimas con punch, elimina palabras blandas ("dócil", "acuarela")\n- Indica BPM, tono y etiquetas de sección [VERSO], [CORO], etc.\n\nLETRA ORIGINAL:\n¡Vamos a cantar los días, todos juntos, con alegría! ¡Bailando y saltando, el lunes va llegando!\n\nEl Lunes, con ganas, vamos a la escuela, con la mochila lista y la sonrisa de acuarela. El Martes, de pronto, la tarea se hace fácil, jugamos con amigos, ¡qué día tan dócil!\n\nEl Miércoles es el día de la mitad, ya pasamos la semana, ¡qué felicidad! El Jueves, ya se siente, el fin de semana cerca, ¡aún hay que esperar un poco, pero ya no nos cerca!\n\nEl Viernes, por fin, llegó la celebración, ¡se acabaron las clases y es pura diversión! Sábado y Domingo, no hay que madrugar, a jugar y a pasear, y a la familia abrazar.\n\n¡Y otra vez, a empezar! Lunes, Martes, Miércoles, Jueves... Viernes, Sábado y Domingo... ¡La semana es para ti, qué bien te la pasas tú! ¡Bravo!`
+      },
+      {
+        title: 'Ejemplo 5 · Crear presentación sobre DUA',
+        formula: 'Tema + audiencia + estructura + enfoque práctico',
+        description: 'Este ejemplo muestra cómo pedir a la IA una presentación breve, estructurada y útil para capacitación docente, con enfoque práctico, lenguaje accesible y organización por diapositivas.',
+        prompt: `Crea una presentación sobre el Diseño Universal de los Aprendizajes (DUA). Debe tener un enfoque práctico y motivador, dirigida a docentes de primaria y secundaria con poca experiencia en el tema. El contenido, estructurado en un guion de aproximadamente 8 diapositivas para 20 minutos, debe comenzar definiendo el DUA y estableciendo su objetivo central: la eliminación de barreras para el aprendizaje. Es fundamental clarificar la diferencia clave entre el DUA y la simple individualización, promoviendo el concepto de diseñar para la variabilidad desde el inicio. El núcleo de la presentación se centrará en los Tres Principios del DUA, explicando cada uno y mencionando explícitamente la Red Cerebral asociada (Redes Afectivas, Redes de Reconocimiento y Redes Estratégicas). Para hacerlo accesible, cada principio debe ir acompañado de al menos un ejemplo de aplicación concreta en el aula. Finalmente, se deben destacar los beneficios universales de implementar el DUA, demostrando que es una estrategia que enriquece la experiencia de aprendizaje para todos los estudiantes.`
+      },
+      {
+        title: 'Ejemplo 6 · Juego educativo Snake con preguntas',
+        formula: 'Rol + objetivo + contexto + estructura técnica',
+        description: 'Este ejemplo muestra cómo pedir a la IA el desarrollo completo de un juego educativo en HTML, CSS y JavaScript, incluyendo lógica, interfaz, preguntas, puntaje y comentarios para facilitar futuras modificaciones.',
+        prompt: `Juego Educativo Snake con preguntas Gemini-ChatGPT- deepseek -Grok
+
+Prompt: Actua como un desarrollador web experto, mi objetivo es crear el código completo (HTML, CSS y JavaScript) para un juego de Snake educativo. El Contexto del juego se enfocará en el ciclo del agua, siguiendo las reglas básicas de Snake, pero con una mecánica adicional: al comer la fruta, el jugador responderá una pregunta sobre el tema para ganar puntos. Instrucción: El código debe ser funcional y estar listo para usarse. El HTML incluirá un botón para comenzar el juego, un lienzo para la jugabilidad, un marcador para mostrar los puntos obtenidos, y un espacio para las preguntas y respuestas. El CSS dará estilo a todos estos elementos para una interfaz atractiva. El JavaScript se encargará de la lógica del juego: el movimiento de la serpiente, la generación de la fruta lejos de los bordes, la integración de un banco de preguntas diferentes sobre el ciclo del agua; las respuestas deben ser selección múltiple y deben ser 5 preguntas; la gestión de respuestas correctas e incorrectas con explicaciones claras, y la actualización del marcador de puntos obtenidos. El código debe estar bien comentado y ser fácil de entender para futuras modificaciones. Al responder las 5 preguntas se termina el juego.`
+      },
+      {
+        title: 'Ejemplo 7 · Consulta breve en TU-BOT',
+        formula: 'Pregunta directa',
+        description: 'Este ejemplo muestra una consulta simple y directa para realizar en TU-BOT cuando se desea obtener una explicación breve sobre un concepto educativo clave.',
+        prompt: `tubot: el prompt: ¿Qué es mentalidad de crecimiento?`
+      },
+      {
+        title: 'Ejemplo 8 · Sesión de aprendizaje completa en TU-BOT',
+        formula: 'Rol + contexto + estructura pedagógica detallada',
+        description: 'Este ejemplo muestra cómo solicitar a TU-BOT una sesión de aprendizaje completa, siguiendo una estructura pedagógica formal, con tablas, secuencia didáctica, anexos técnicos y enfoque en aprendizaje activo.',
+        prompt: `Actúa como docente experto del nivel Primaria en Perú. Genera una sesión de aprendizaje completa siguiendo rigurosamente la estructura del documento adjunto para el grado [Primer Grado] y el área de [Personal Social], sobre el tema: [hábitos de higiene y vida saludable], Duración de la sesión [“80 min”], Título de la sesión: [“Limpios y seguros”], contexto: [Aprender acciones para estar limpios y seguros, y así evitar enfermedades.]. La sesión debe incluir:
+Datos Informativos: Completa los campos de Institución Educativa, Lugar, Nivel, Área, Duración, Docente y Grado.
+Título de la Sesión: Debe ser motivador y estar entre comillas (ej. 'REALIZAMOS UN CULTIVO...').
+Cuadro de Situación y Propósito: Incluye una tabla con tres columnas: 'Situación de aprendizaje' (contexto del problema), 'Propósito de la Sesión' y 'Materiales/Recursos a utilizar'.
+Aprendizajes Esperados: Una tabla detallando la Competencia, Capacidades e Indicadores específicos (desempeños precisados).
+Secuencia Didáctica Detallada:
+Inicio: Saludo, motivación, recojo de saberes previos con preguntas específicas y presentación del propósito y normas de convivencia.
+Desarrollo: Sigue los procesos didácticos del área (ej. para Ciencia: Situación inicial, Planteamiento del problema, Planteamiento de hipótesis, Plan de indagación, Registro de datos y Análisis, Evaluación y comunicación). Cada paso debe incluir las preguntas exactas que el docente hará a los estudiantes.
+Cierre: Preguntas de metacognición (qué aprendieron, dificultades, utilidad) y actividades de orden/limpieza.
+Anexos Técnicos:
+Anexo 1: Una guía de pasos numerados con instrucciones claras y materiales necesarios para la actividad práctica (similar a 'Cosechamos lechugas').
+Anexo 2: Una Lista de cotejo que relacione directamente la competencia y capacidad con el indicador evaluado, incluyendo una tabla para el registro de los estudiantes.
+Mantén un lenguaje pedagógico claro, orientado a la indagación y al aprendizaje activo, asegurando que todas las actividades sean coherentes con el propósito de la sesión.`
+      }
+    ];
+
+    const featuredList = document.getElementById('featuredList');
+    const allToolsList = document.getElementById('allToolsList');
+    const allToolsWrapper = document.getElementById('allTools');
+    const toggleBtn = document.getElementById('toggleTools');
+    const promptContainer = document.getElementById('promptExamples');
+
+    function openInNewTab(url) {
+      const newTab = window.open(url, '_blank', 'noopener,noreferrer');
+      if (newTab) newTab.opener = null;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function renderTableRows(list, descriptionKey) {
+      return list.map((tool) => {
+        const safeName = escapeHtml(tool.name);
+        const safeAccount = escapeHtml(tool.account);
+        const safeDescription = escapeHtml(tool[descriptionKey]);
+        const safeLink = escapeHtml(tool.link);
+        return `
+          <tr>
+            <td class="col-app" data-label="App y cuenta">
+              <strong>${safeName}</strong>
+              <span class="account-tag">Cuenta: ${safeAccount}</span>
+            </td>
+            <td data-label="Explicación">${safeDescription}</td>
+            <td data-label="Abrir herramienta">
+              <button class="tool-link" type="button" data-url="${safeLink}">Abrir herramienta</button>
+              <div style="margin-top:8px; font-size:.78rem; color:var(--muted); word-break:break-all;">${safeLink}</div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderFeaturedTools() {
+      featuredList.innerHTML = renderTableRows(featuredTools, 'description');
+    }
+
+    function groupByCategory(list) {
+      return list.reduce((acc, item) => {
+        if (!acc[item.category]) acc[item.category] = [];
+        acc[item.category].push(item);
+        return acc;
+      }, {});
+    }
+
+    function renderAllTools() {
+      const grouped = groupByCategory(allTools);
+      allToolsList.innerHTML = Object.entries(grouped).map(([category, tools]) => {
+        const safeCategory = escapeHtml(category);
+        return `
+          <section class="category-block">
+            <h4 class="category-title">${safeCategory}</h4>
+            <div class="tools-table-wrap">
+              <table class="tools-table">
+                <thead>
+                  <tr>
+                    <th>App y cuenta</th>
+                    <th>Explicación</th>
+                    <th>Abrir herramienta</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${renderTableRows(tools, 'note')}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        `;
+      }).join('');
+    }
+
+    function renderPromptText(value) {
+      return String(value);
+    }
+
+    function renderPromptCard(item, index) {
+      const safeTitle = escapeHtml(item.title);
+      const safeFormula = escapeHtml(item.formula);
+      const safeDescription = escapeHtml(item.description);
+
+      let promptContent = '';
+      if (item.image) {
+        const safeImage = escapeHtml(item.image);
+        promptContent = `
+          <div class="prompt-layout">
+            <div>
+              <div class="prompt-box">
+                <strong>¿Para qué sirve?</strong>
+                <div>${safeDescription}</div>
+              </div>
+              <div class="prompt-box">
+                <strong><b>Prompt</b> ejemplo</strong>
+                <div class="prompt-text">${renderPromptText(item.prompt)}</div>
+              </div>
+            </div>
+            <div>
+              <img class="prompt-side-image" src="${safeImage}" alt="Imagen de apoyo para el ejemplo 2" referrerpolicy="no-referrer" />
+              <div class="prompt-side-note">Imagen de referencia para copiar y pegar en la IA preferida.</div>
+            </div>
+          </div>
+        `;
+      } else {
+        promptContent = `
+          <div class="prompt-body">
+            <div class="prompt-box">
+              <strong>¿Para qué sirve?</strong>
+              <div>${safeDescription}</div>
+            </div>
+            <div class="prompt-box">
+              <strong><b>Prompt</b> ejemplo</strong>
+              <div class="prompt-text">${renderPromptText(item.prompt)}</div>
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <article class="prompt-card c${(index % 6) + 1}">
+          <div class="prompt-top">
+            <h3>${safeTitle}</h3>
+            <span class="prompt-label">Fórmula: ${safeFormula}</span>
+          </div>
+          ${promptContent}
+        </article>
+      `;
+    }
+
+    function renderPrompts() {
+      promptContainer.innerHTML = promptExamples.map((item, index) => renderPromptCard(item, index)).join('');
+    }
+
+    function bindToolButtons() {
+      document.querySelectorAll('.tool-link[data-url]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const url = button.getAttribute('data-url');
+          if (url) openInNewTab(url);
+        });
+      });
+    }
+
+    function setupToggle() {
+      if (!toggleBtn) return;
+      toggleBtn.addEventListener('click', () => {
+        const isHidden = allToolsWrapper.hasAttribute('hidden');
+        if (isHidden) {
+          allToolsWrapper.removeAttribute('hidden');
+          toggleBtn.textContent = 'Ocultar listado completo';
+        } else {
+          allToolsWrapper.setAttribute('hidden', '');
+          toggleBtn.textContent = 'Mostrar todas las IA';
+        }
+      });
+    }
+
+    function setupPromptGuideImage() {
+      const img = document.getElementById('promptGuideImage');
+      const status = document.getElementById('promptGuideStatus');
+      if (!img || !status) return;
+
+      const fallbacks = [
+        'https://www.dropbox.com/scl/fi/bakyfpk5dcbryv8ascmje/Prompts_Efectivos.png?rlkey=k94w81zoi8q27ywy0sufnhyle&st=6qtpn5b9&raw=1',
+        'https://www.dropbox.com/scl/fi/bakyfpk5dcbryv8ascmje/Prompts_Efectivos.png?rlkey=k94w81zoi8q27ywy0sufnhyle&st=6qtpn5b9&dl=1',
+        'https://www.dropbox.com/scl/fi/bakyfpk5dcbryv8ascmje/Prompts_Efectivos.png?rlkey=k94w81zoi8q27ywy0sufnhyle&st=6qtpn5b9&raw=1#view'
+      ];
+
+      let attempt = 0;
+
+      function handleLoad() {
+        status.innerHTML = 'Imagen cargada correctamente desde Dropbox. <a href="https://www.dropbox.com/scl/fi/bakyfpk5dcbryv8ascmje/Prompts_Efectivos.png?rlkey=k94w81zoi8q27ywy0sufnhyle&st=6qtpn5b9&dl=0" target="_blank" rel="noopener noreferrer">Abrir original</a>';
+      }
+
+      function handleError() {
+        attempt += 1;
+        if (attempt < fallbacks.length) {
+          img.src = fallbacks[attempt];
+          status.textContent = 'Probando otra ruta de Dropbox para mostrar la imagen...';
+        } else {
+          status.innerHTML = 'No fue posible mostrar la imagen directamente desde Dropbox en esta vista previa. Puedes abrirla aquí: <a href="https://www.dropbox.com/scl/fi/bakyfpk5dcbryv8ascmje/Prompts_Efectivos.png?rlkey=k94w81zoi8q27ywy0sufnhyle&st=6qtpn5b9&dl=0" target="_blank" rel="noopener noreferrer">ver imagen original</a>';
+        }
+      }
+
+      img.addEventListener('load', handleLoad, { once: true });
+      img.addEventListener('error', handleError);
+    }
+
+    function runTests() {
+      console.assert(Array.isArray(featuredTools) && featuredTools.length === 3, 'Debe haber 3 herramientas destacadas.');
+      console.assert(Array.isArray(promptExamples) && promptExamples.length >= 8, 'Debe haber al menos 8 ejemplos de prompts.');
+      console.assert(promptExamples[0].prompt.includes('Miguel de Cervantes'), 'El ejemplo 1 debe incluir a Miguel de Cervantes.');
+      console.assert(promptExamples[1].prompt.includes('Transcribir a texto esta imagen'), 'El ejemplo 2 debe incluir el prompt de transcripción.');
+      console.assert(promptExamples[2].prompt.includes('EL ciclo del Hidrológico del Agua'), 'El ejemplo 3 debe incluir el video del ciclo del agua.');
+      console.assert(promptExamples[3].prompt.includes('salsa energética para niños de primaria'), 'El ejemplo 4 debe incluir la canción de salsa infantil.');
+      console.assert(promptExamples[4].prompt.includes('Diseño Universal de los Aprendizajes (DUA)'), 'El ejemplo 5 debe incluir el tema DUA.');
+      console.assert(promptExamples[5].prompt.includes('juego de Snake educativo'), 'El ejemplo 6 debe incluir el juego Snake educativo.');
+      console.assert(promptExamples[6].prompt.includes('mentalidad de crecimiento'), 'El ejemplo 7 debe incluir mentalidad de crecimiento.');
+      console.assert(promptExamples[7].prompt.includes('hábitos de higiene y vida saludable'), 'El ejemplo 8 debe incluir hábitos de higiene y vida saludable.');
+      console.assert(typeof featuredTools[0].link === 'string' && featuredTools[0].link.startsWith('https://'), 'Los enlaces de herramientas deben ser URLs HTTPS.');
+      console.assert(typeof promptExamples[1].image === 'string' && promptExamples[1].image.startsWith('https://'), 'El ejemplo 2 debe incluir una imagen HTTPS.');
+      console.assert(typeof renderPromptCard === 'function', 'La función renderPromptCard debe existir.');
+    }
+
+    function init() {
+      renderFeaturedTools();
+      renderAllTools();
+      renderPrompts();
+      bindToolButtons();
+      setupToggle();
+      setupPromptGuideImage();
+      runTests();
+    }
+
+    init();
+  </script>
+</body>
+</html>
